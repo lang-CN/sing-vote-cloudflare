@@ -1,6 +1,7 @@
 interface Env {
     DB: D1Database;
     NODE_ENV?: string;
+    MY_SECRET: KVNamespace; // 新增密钥存储声明
   }
   
   interface User {
@@ -39,12 +40,25 @@ interface Env {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
       };
       
       // 处理预检请求
       if (method === 'OPTIONS') {
         return new Response(null, { headers });
+      }
+
+      // 获取 secret token
+      const secretToken = await env.MY_SECRET.get('token');
+      // 只允许 /health 和 /version 端点不校验 token
+      if (!(path === '/health' || path === '/version')) {
+        const authHeader = request.headers.get('Authorization');
+        if (!authHeader || !authHeader.startsWith('Bearer ') || authHeader.slice(7) !== secretToken) {
+          return new Response(JSON.stringify({ error: '未授权，缺少或错误的 token' }), {
+            status: 401,
+            headers
+          });
+        }
       }
       
       try {
@@ -331,4 +345,3 @@ interface Env {
       }
     },
   };
-      

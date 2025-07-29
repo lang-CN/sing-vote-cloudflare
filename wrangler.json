@@ -12,5 +12,12 @@
     ],
     "observability": {
       "enabled": true
+    },
+    "secrets_store_secrets": [
+    {
+      "binding": "MY_SECRET",
+      "store_id": "c67f0e13ddbf4259809c6d652766b9e5",
+      "secret_name": "sing-vote-token"
     }
+  ]
   }
