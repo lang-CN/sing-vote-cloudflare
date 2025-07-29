@@ -1,0 +1,16 @@
+{
+    "compatibility_date": "2025-07-28",
+    "main": "src/index.ts",
+    "name": "sing-vote",
+    "upload_source_maps": true,
+    "d1_databases": [
+      {
+        "binding": "DB",
+        "database_id": "2b8485ce-c6b5-44d0-ab14-c02b08b4a9ee",
+        "database_name": "sing-vote"
+      }
+    ],
+    "observability": {
+      "enabled": true
+    }
+  }
