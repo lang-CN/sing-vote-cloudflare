@@ -181,3 +181,4 @@ build/
 
 # Turbo output
 .turbo/
+.vscode
