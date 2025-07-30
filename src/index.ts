@@ -50,6 +50,7 @@ export default {
 
     // 获取 secret token
     const secretToken = await env.MY_SECRET.get('token');
+    console.log(secretToken);
     // 只允许 /health 和 /version 端点不校验 token
     if (!(path === '/health' || path === '/version')) {
 
