@@ -270,12 +270,18 @@ export default {
       // 获取所有签字信息（不含敏感数据）
       if (path === '/all-signatures' && method === 'GET') {
         const { results } = await env.DB.prepare(
-          'SELECT id, signature, room_number, created_at FROM user ORDER BY created_at DESC'
+          'SELECT id, signature, room_number, created_at, signature_image FROM user ORDER BY created_at DESC'
         ).all<User>();
 
+        // 保证 created_at 为 ISO 字符串
+        const signatures = results.map(u => ({
+          ...u,
+          created_at: u.created_at ? new Date(u.created_at).toISOString() : null
+        }));
+
         return new Response(JSON.stringify({
-          signatures: results,
-          total: results.length
+          signatures,
+          total: signatures.length
         }), { headers });
       }
 
@@ -302,10 +308,20 @@ export default {
       // 管理员查看所有记录
       if (path === '/admin/signatures' && method === 'GET') {
         const { results } = await env.DB.prepare('SELECT * FROM user').all<User>();
-
+        // 保证 created_at 为 ISO 字符串
+        const signatures = results.map(u => ({
+          id: u.id,
+          ip: u.ip,
+          device_uuid: u.device_uuid,
+          device_fingerprint: u.device_fingerprint,
+          signature: u.signature,
+          signature_image: u.signature_image,
+          created_at: u.created_at ? new Date(u.created_at).toISOString() : null,
+          room_number: u.room_number
+        }));
         return new Response(JSON.stringify({
-          signatures: results,
-          total: results.length
+          signatures,
+          total: signatures.length
         }), { headers });
       }
 
@@ -344,6 +360,16 @@ export default {
           signature_name: user.signature,
           signature_data: user.signature_image
         }), { headers });
+      }
+
+      // 检查密码端点
+      if (path === '/check-password' && method === 'POST') {
+        const { password } = await request.json();
+        if (password === '123qwe') {
+          return new Response(JSON.stringify({ success: true }), { headers });
+        } else {
+          return new Response(JSON.stringify({ success: false }), { status: 401, headers });
+        }
       }
 
       // 未找到的端点
