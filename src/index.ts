@@ -364,7 +364,7 @@ export default {
 
       // 检查密码端点
       if (path === '/check-password' && method === 'POST') {
-        const { password } = await request.json();
+        const { password } = await request.json() as { password: string };
         if (password === '123qwe') {
           return new Response(JSON.stringify({ success: true }), { headers });
         } else {
