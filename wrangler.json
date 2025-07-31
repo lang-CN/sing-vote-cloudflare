@@ -1,7 +1,7 @@
 {
     "compatibility_date": "2025-07-28",
     "main": "src/index.ts",
-    "name": "sing-vote",
+    "name": "sing-vote-db",
     "upload_source_maps": true,
     "d1_databases": [
       {
