@@ -194,6 +194,21 @@ export default {
           });
         }
 
+        // 新增：根据 signature_name 和 room_number 检查是否已存在
+        const { results: sameNameRoomUsers } = await env.DB.prepare(`
+            SELECT * FROM user WHERE signature = ? AND room_number = ?
+          `).bind(signatureData.signature_name.trim(), signatureData.room_number).all<User>();
+        if (sameNameRoomUsers.length > 0) {
+          // 返回已存在的用户信息
+          return new Response(JSON.stringify({
+            error: '该姓名和门牌号已存在',
+            user: sameNameRoomUsers[0]
+          }), {
+            status: 400,
+            headers
+          });
+        }
+
         // 处理签名数据
         let base64Data: string;
         if (signatureData.signature_data.startsWith('data:image/')) {
