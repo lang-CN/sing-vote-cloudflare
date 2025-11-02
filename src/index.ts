@@ -304,7 +304,7 @@ export default {
       if (path === '/statistics' && method === 'GET') {
         const { results } = await env.DB.prepare('SELECT COUNT(*) as count FROM user').all();
         const totalSignatures = results[0]?.count || 0;
-        const targetSignatures = 667;
+        const targetSignatures = 698;
         // 确保参与运算的变量是数字类型
         const totalSignaturesNum = Number(totalSignatures);
         const targetSignaturesNum = Number(targetSignatures);
@@ -380,7 +380,7 @@ export default {
       // 检查密码端点
       if (path === '/check-password' && method === 'POST') {
         const { password } = await request.json() as { password: string };
-        if (password === '123qwe') {
+        if (password === 'qweasd123') {
           return new Response(JSON.stringify({ success: true }), { headers });
         } else {
           return new Response(JSON.stringify({ success: false }), { status: 401, headers });
